@@ -23,7 +23,7 @@ public class Client {
     public Client() {
     }
 
-    public Client(Long id, String mário, String cpf, double income, String s, int children) {
+    public Client(Long id, String name, String cpf, Double income, LocalDate birthDate, Integer children) {
         this.id = id;
         this.name = name;
         this.cpf = cpf;
