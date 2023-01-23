@@ -41,5 +41,13 @@ public class ClientControllers {
         return ResponseEntity.created(uri).body(insertDto);
     }
 
+    @PutMapping(value = "/{id}") /*Atualizar dados no banco*/
+    public ResponseEntity<ClientDto> update(@PathVariable Long id, @RequestBody ClientDto updateDto) {
+        updateDto = service.update(id, updateDto);
+        return ResponseEntity.ok(updateDto);
+
+
+    }
+
 
 }

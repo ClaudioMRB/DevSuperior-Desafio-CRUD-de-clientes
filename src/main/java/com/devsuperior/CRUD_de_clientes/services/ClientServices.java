@@ -4,6 +4,7 @@ import com.devsuperior.CRUD_de_clientes.dto.ClientDto;
 import com.devsuperior.CRUD_de_clientes.entities.Client;
 import com.devsuperior.CRUD_de_clientes.repository.ClientRepository;
 
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -40,6 +41,17 @@ public class ClientServices {
         return new ClientDto(entity);
 
     }
+
+    @Transactional(readOnly = true) /*Atualizar dados no banco*/
+    public ClientDto update(Long id, ClientDto dto) {
+        Client entity = repository.getReferenceById(id);
+        copyDtoToEntity(dto, entity);
+        entity = repository.save(entity);
+        return new ClientDto(entity);
+
+
+    }
+
 
     /*método para reaproveitamento de códigos*/
     private void copyDtoToEntity(ClientDto dto, Client entity) {
