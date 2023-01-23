@@ -1,11 +1,18 @@
 package com.devsuperior.CRUD_de_clientes.entities;
 
+import jakarta.persistence.*;
+
 import java.time.LocalDate;
 
+@Entity
+@Table(name = "tb_client")
 public class Client {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
+    @Column(unique = true)
     private String cpf;
     private Double income;
     private LocalDate birthDate;
@@ -69,5 +76,17 @@ public class Client {
 
     public void setChildren(Integer children) {
         this.children = children;
+    }
+
+    @Override
+    public String toString() {
+        return "Client{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", cpf='" + cpf + '\'' +
+                ", income=" + income +
+                ", birthDate=" + birthDate +
+                ", children=" + children +
+                '}';
     }
 }
