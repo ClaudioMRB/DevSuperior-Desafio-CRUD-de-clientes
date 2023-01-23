@@ -1,5 +1,6 @@
 package com.devsuperior.CRUD_de_clientes.dto;
 
+import com.devsuperior.CRUD_de_clientes.entities.Client;
 import jakarta.persistence.Column;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -23,13 +24,13 @@ public class ClientDto {
     public ClientDto() {
     }
 
-    public ClientDto(Long id, String name, String cpf, Double income, LocalDate birthDate, Integer children) {
-        this.id = id;
-        this.name = name;
-        this.cpf = cpf;
-        this.income = income;
-        this.birthDate = birthDate;
-        this.children = children;
+    public ClientDto(Client entity) {
+        id = entity.getId();
+        name = entity.getName();
+        cpf = entity.getCpf();
+        income = entity.getIncome();
+        birthDate = entity.getBirthDate();
+        children = entity.getChildren();
     }
 
     public Long getId() {
