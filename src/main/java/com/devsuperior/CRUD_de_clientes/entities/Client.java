@@ -15,13 +15,15 @@ public class Client {
     @Column(unique = true)
     private String cpf;
     private Double income;
+
+
     private LocalDate birthDate;
     private Integer children;
 
     public Client() {
     }
 
-    public Client(Long id, String name, String cpf, Double income, LocalDate birthDate, Integer children) {
+    public Client(Long id, String mário, String cpf, double income, String s, int children) {
         this.id = id;
         this.name = name;
         this.cpf = cpf;
