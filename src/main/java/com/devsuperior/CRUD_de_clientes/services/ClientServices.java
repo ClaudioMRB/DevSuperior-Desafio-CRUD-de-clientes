@@ -5,6 +5,8 @@ import com.devsuperior.CRUD_de_clientes.entities.Client;
 import com.devsuperior.CRUD_de_clientes.repository.ClientRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,8 +24,12 @@ public class ClientServices {
         Client ativ = result.get();
         ClientDto dto = new ClientDto(ativ);
         return dto;
+    }
 
-
+    @Transactional(readOnly = true) /*Busca paginada de clientes*/
+    public Page<ClientDto> findAll(Pageable pageable) {
+        Page<Client> result = repository.findAll(pageable);
+        return result.map(x -> new ClientDto(x));
     }
 
 
