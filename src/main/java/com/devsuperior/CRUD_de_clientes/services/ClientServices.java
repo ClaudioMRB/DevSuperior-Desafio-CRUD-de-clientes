@@ -4,11 +4,16 @@ import com.devsuperior.CRUD_de_clientes.dto.ClientDto;
 import com.devsuperior.CRUD_de_clientes.entities.Client;
 import com.devsuperior.CRUD_de_clientes.repository.ClientRepository;
 
+import com.devsuperior.CRUD_de_clientes.services.exception.DatabaseException;
+import com.devsuperior.CRUD_de_clientes.services.exception.ResourceNotFoundException;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
@@ -22,7 +27,7 @@ public class ClientServices {
     @Transactional(readOnly = true) //Buscar por ID
     public ClientDto findById(Long id) {
         Optional<Client> result = repository.findById(id);
-        Client ativ = result.get();
+        Client ativ = result.orElseThrow(() -> new ResourceNotFoundException("Cliente inexistente"));
         ClientDto dto = new ClientDto(ativ);
         return dto;
     }
@@ -39,17 +44,25 @@ public class ClientServices {
         copyDtoToEntity(dto, entity);
         entity = repository.save(entity);
         return new ClientDto(entity);
-
     }
 
-    @Transactional(readOnly = true) /*Atualizar dados no banco*/
+        @Transactional /*Atualizar dados no banco*/
     public ClientDto update(Long id, ClientDto dto) {
         Client entity = repository.getReferenceById(id);
         copyDtoToEntity(dto, entity);
         entity = repository.save(entity);
         return new ClientDto(entity);
+    }
 
-
+    @Transactional(propagation = Propagation.SUPPORTS) /*Deleção de cliente*/
+    public void delete(Long id) {
+        try {
+            repository.deleteById(id);
+        } catch (EmptyResultDataAccessException e) {
+            throw new ResourceNotFoundException("Recurso não encontrado");
+        } catch (DataIntegrityViolationException e) {
+            throw new DatabaseException("Falha de integridade referencial");
+        }
     }
 
 
