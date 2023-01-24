@@ -30,6 +30,7 @@ public class ClientServices {
         Client ativ = result.orElseThrow(() -> new ResourceNotFoundException("Cliente inexistente"));
         ClientDto dto = new ClientDto(ativ);
         return dto;
+
     }
 
     @Transactional(readOnly = true) /*Busca paginada de clientes*/
@@ -46,12 +47,17 @@ public class ClientServices {
         return new ClientDto(entity);
     }
 
-        @Transactional /*Atualizar dados no banco*/
+    @Transactional /*Atualizar dados no banco*/
     public ClientDto update(Long id, ClientDto dto) {
-        Client entity = repository.getReferenceById(id);
-        copyDtoToEntity(dto, entity);
-        entity = repository.save(entity);
-        return new ClientDto(entity);
+        try {
+            Client entity = repository.getReferenceById(id);
+            copyDtoToEntity(dto, entity);
+            entity = repository.save(entity);
+            return new ClientDto(entity);
+        } catch (EntityNotFoundException e) {
+            throw new ResourceNotFoundException("Recurso não encontrada");
+
+        }
     }
 
     @Transactional(propagation = Propagation.SUPPORTS) /*Deleção de cliente*/
@@ -59,7 +65,7 @@ public class ClientServices {
         try {
             repository.deleteById(id);
         } catch (EmptyResultDataAccessException e) {
-            throw new ResourceNotFoundException("Recurso não encontrado");
+            throw new ResourceNotFoundException("Recurso não encontrada");
         } catch (DataIntegrityViolationException e) {
             throw new DatabaseException("Falha de integridade referencial");
         }

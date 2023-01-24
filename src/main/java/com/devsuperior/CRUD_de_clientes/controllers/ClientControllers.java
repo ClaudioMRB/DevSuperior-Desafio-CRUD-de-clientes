@@ -26,15 +26,9 @@ public class ClientControllers {
     private ClientServices service;
 
     @GetMapping(value = "/{id}") //Buscar por ID
-    public ResponseEntity<?> findById(@PathVariable Long id) {
-        try {
-            ClientDto findbyid = service.findById(id);
-            return ResponseEntity.ok(findbyid);
-        } catch (ResourceNotFoundException e) {
-            CustomError error = new CustomError(Instant.now(), 404, e.getMessage(), "caminho");
-            return ResponseEntity.status(404).body(error);
-        }
-
+    public ResponseEntity<ClientDto> findById(@PathVariable Long id) {
+        ClientDto findbyid = service.findById(id);
+        return ResponseEntity.ok(findbyid);
     }
 
     @GetMapping /*Busca paginada de clientes*/
