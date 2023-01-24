@@ -41,10 +41,14 @@ public class ClientServices {
 
     @Transactional(readOnly = true) /*Inserção de novo cliente*/
     public ClientDto Insert(ClientDto dto) {
-        Client entity = new Client();
-        copyDtoToEntity(dto, entity);
-        entity = repository.save(entity);
-        return new ClientDto(entity);
+        try {
+            Client entity = new Client();
+            copyDtoToEntity(dto, entity);
+            entity = repository.save(entity);
+            return new ClientDto(entity);
+        } catch (DataIntegrityViolationException e) {
+            throw new DatabaseException("Dados Inválidos");
+        }
     }
 
     @Transactional /*Atualizar dados no banco*/
@@ -55,7 +59,7 @@ public class ClientServices {
             entity = repository.save(entity);
             return new ClientDto(entity);
         } catch (EntityNotFoundException e) {
-            throw new ResourceNotFoundException("Recurso não encontrada");
+            throw new ResourceNotFoundException("Recurso não encontrado");
 
         }
     }
@@ -65,7 +69,7 @@ public class ClientServices {
         try {
             repository.deleteById(id);
         } catch (EmptyResultDataAccessException e) {
-            throw new ResourceNotFoundException("Recurso não encontrada");
+            throw new ResourceNotFoundException("Cliente inexistente");
         } catch (DataIntegrityViolationException e) {
             throw new DatabaseException("Falha de integridade referencial");
         }
